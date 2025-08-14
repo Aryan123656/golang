@@ -11,10 +11,12 @@ type post struct {
 }
 
 func (p *post) add(wg *sync.WaitGroup) {
-	defer wg.Done()
+	defer func() {
+		wg.Done()
+		p.mu.Unlock()
+	}()
 	p.mu.Lock()
 	p.views += 1
-	p.mu.Unlock()
 }
 
 func main() {
